@@ -24,7 +24,9 @@ public class OnTouchPuzzleListener implements OnTouchListener {
         Coordinate coordinate = new Coordinate(x,y);
         for (int i = 0; i<puzzlePieces.getCount(); i++) {
             if (puzzlePieces.getItem(i).getAlpha() == 0f) {
-                if(NearMe(coordinate.ToRound(puzzlePieces.getItem(i).getWidth()+1f), puzzlePieces.getPuzzleModel().get(i))) {
+                Coordinate emptyImageView = new Coordinate(puzzlePieces.getItem(i).getX(),
+                        puzzlePieces.getItem(i).getY()).ToRound(puzzlePieces.getItem(i).getWidth()+1f);
+                if(NearMe(coordinate.ToRound(puzzlePieces.getItem(i).getWidth()+1f), emptyImageView)) {
                     coordinate = new Coordinate(puzzlePieces.getItem(i).getX(), puzzlePieces.getItem(i).getY());
                     puzzlePieces.getItem(i).setX(x);
                     puzzlePieces.getItem(i).setY(y);
@@ -37,7 +39,17 @@ public class OnTouchPuzzleListener implements OnTouchListener {
 
 
     private boolean NearMe(Coordinate a, Coordinate b){
-        if(a.x+1 == b.x){
+        //System.out.println(a.x + " " + a.y + " - " + b.x + " " + b.y );
+        if(a.x+1 == b.x && a.y == b.y){
+            return true;
+        }
+        if(a.x-1 == b.x && a.y == b.y){
+            return true;
+        }
+        if(a.y+1 == b.y && a.x == b.x){
+            return true;
+        }
+        if(a.y-1 == b.y && a.x == b.x){
             return true;
         }
         return false;

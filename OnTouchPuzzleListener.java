@@ -13,19 +13,32 @@ import java.util.ArrayList;
 
 public class OnTouchPuzzleListener implements OnTouchListener {
     ArrayList<ImageView> puzzlePiecesViews;
+
     public OnTouchPuzzleListener(ArrayList<ImageView> puzzlePiecesViews) {
         this.puzzlePiecesViews = puzzlePiecesViews;
     }
 
-    private Coordinate FindBlankPieceCoordinates(float x, float y){
-        for(ImageView imageView:puzzlePiecesViews){
-            if(imageView.getAlpha()==0f){
-                imageView.setX(x);
-                imageView.setY(y);
-                return new Coordinate(imageView.getX(), imageView.getY());
+    private Coordinate FindBlankPieceCoordinates(float x, float y) {
+        for (ImageView imageView : puzzlePiecesViews) {
+            if (imageView.getAlpha() == 0f) {
+                Coordinate coordinate = new Coordinate(x, y);
+                if (NextToYou(x,y,imageView)) {
+                    coordinate = new Coordinate(imageView.getX(), imageView.getY());
+                    imageView.setX(x);
+                    imageView.setY(y);
+                }
+                return coordinate;
             }
         }
         return null;
+    }
+
+    private boolean NextToYou(float x, float y, ImageView you) {
+        if ((x+you.getWidth()<=you.getX() || x-you.getWidth()>=you.getX())
+                && (y+you.getHeight()<=you.getY() || y-you.getHeight()>=you.getY())) {
+            return false;
+        }
+        return true;
     }
 
     @Override

@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * https://developer.android.com/guide/topics/ui/layout/gridview.html
@@ -16,25 +18,20 @@ import java.util.ArrayList;
  */
 
 public class PuzzlePieces extends BaseAdapter{
-    private ArrayList<Bitmap> puzzlePieces;
     private ArrayList<ImageView> puzzlePiecesViews = new ArrayList<>();
+    private HashMap<Integer,Coordinate> puzzleModel = new HashMap<>();
     private Bitmap image;
     private Context context;
     private int size;
 
     @Override
     public int getCount() {
-        return puzzlePieces.size();
+        return puzzlePiecesViews.size();
     }
 
     @Override
-    public Object getItem(int position) {
+    public ImageView getItem(int position) {
         return puzzlePiecesViews.get(position);
-    }
-
-    public Object getItem(int x, int y){
-        int index = x * size + y;
-        return puzzlePiecesViews.get(index+1);
     }
 
     @Override
@@ -44,15 +41,7 @@ public class PuzzlePieces extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView = new ImageView(context);
-        imageView.setAdjustViewBounds(true);
-        imageView.setImageBitmap(puzzlePieces.get(position));
-        imageView.setOnTouchListener(new OnTouchPuzzleListener(puzzlePiecesViews));
-        if(puzzlePiecesViews.size()==puzzlePieces.size()) {
-            imageView.setAlpha(0f);
-        }
-        puzzlePiecesViews.add(imageView);
-        return imageView;
+        return puzzlePiecesViews.get(position);
     }
 
     public PuzzlePieces(Context context, String name, int size){
@@ -60,21 +49,35 @@ public class PuzzlePieces extends BaseAdapter{
         this.size = size;
         image = BitmapFactory.decodeResource(context.getResources(),
                 context.getResources().getIdentifier(name,"drawable", context.getPackageName()));
-        puzzlePieces = genPuzzlePieces(image, size);
+        genPuzzlePieces(image);
     }
 
-    private ArrayList<Bitmap> genPuzzlePieces(Bitmap image, int size){
-        ArrayList<Bitmap> results = new ArrayList<>();
+    public HashMap<Integer, Coordinate> getPuzzleModel() {
+        return puzzleModel;
+    }
 
+    private void genPuzzlePieces(Bitmap image){
+        int at=0;
         for(int i = 0; i < size; i++) {
             for(int j = 0; j < size; j++) {
-                results.add(Bitmap.createBitmap(image, j * (image.getWidth()/size),
+                Bitmap toAdd = Bitmap.createBitmap(image, j * (image.getWidth()/size),
                         i * (image.getWidth()/size), (image.getWidth()/size),
-                        (image.getWidth()/size)));
+                        (image.getWidth()/size));
+                puzzleModel.put(at++, new Coordinate(i,j));
+
+                ImageView imageView = new ImageView(context);
+                imageView.setAdjustViewBounds(true);
+                imageView.setImageBitmap(toAdd);
+                imageView.setOnTouchListener(new OnTouchPuzzleListener(this));
+
+                if(puzzlePiecesViews.size()==size*size-1){
+                    imageView.setAlpha(0f);
+                }
+
+                puzzlePiecesViews.add(imageView);
             }
         }
 
-        return results;
     }
 
 }

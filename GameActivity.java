@@ -36,6 +36,4 @@ public class GameActivity extends AppCompatActivity {
         puzzleGridView.setNumColumns(size);
         puzzleGridView.setAdapter(puzzlePieces);
     }
-
-
 }

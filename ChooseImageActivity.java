@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ChooseImageActivity extends AppCompatActivity {
     ImageView image;
-    int size = 3;
+    int size = 5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

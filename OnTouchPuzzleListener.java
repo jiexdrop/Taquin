@@ -6,39 +6,41 @@ import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Jorge Nogueira on 04/03/17.
  */
 
 public class OnTouchPuzzleListener implements OnTouchListener {
-    ArrayList<ImageView> puzzlePiecesViews;
+    PuzzlePieces puzzlePieces;
 
-    public OnTouchPuzzleListener(ArrayList<ImageView> puzzlePiecesViews) {
-        this.puzzlePiecesViews = puzzlePiecesViews;
+    public OnTouchPuzzleListener(PuzzlePieces puzzlePieces) {
+        this.puzzlePieces = puzzlePieces;
+
     }
 
     private Coordinate FindBlankPieceCoordinates(float x, float y) {
-        for (ImageView imageView : puzzlePiecesViews) {
-            if (imageView.getAlpha() == 0f) {
-                Coordinate coordinate = new Coordinate(x, y);
-                if (NextToYou(x,y,imageView)) {
-                    coordinate = new Coordinate(imageView.getX(), imageView.getY());
-                    imageView.setX(x);
-                    imageView.setY(y);
+        Coordinate coordinate = new Coordinate(x,y);
+        for (int i = 0; i<puzzlePieces.getCount(); i++) {
+            if (puzzlePieces.getItem(i).getAlpha() == 0f) {
+                if(NearMe(coordinate.ToRound(puzzlePieces.getItem(i).getWidth()+1f), puzzlePieces.getPuzzleModel().get(i))) {
+                    coordinate = new Coordinate(puzzlePieces.getItem(i).getX(), puzzlePieces.getItem(i).getY());
+                    puzzlePieces.getItem(i).setX(x);
+                    puzzlePieces.getItem(i).setY(y);
                 }
-                return coordinate;
+                return coordinate.ToBackUp();
             }
         }
-        return null;
+        return coordinate.ToBackUp();
     }
 
-    private boolean NextToYou(float x, float y, ImageView you) {
-        if ((x+you.getWidth()<=you.getX() || x-you.getWidth()>=you.getX())
-                && (y+you.getHeight()<=you.getY() || y-you.getHeight()>=you.getY())) {
-            return false;
+
+    private boolean NearMe(Coordinate a, Coordinate b){
+        if(a.x+1 == b.x){
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

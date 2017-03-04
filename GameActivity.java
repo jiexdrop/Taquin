@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.GridView;
@@ -35,5 +37,13 @@ public class GameActivity extends AppCompatActivity {
 
         puzzleGridView.setNumColumns(size);
         puzzleGridView.setAdapter(puzzlePieces);
+
+    }
+
+
+    public void startGame(View view) {
+        view.setVisibility(View.INVISIBLE);
+
+        puzzlePieces.Shuffle();
     }
 }

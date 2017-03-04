@@ -13,55 +13,39 @@ import java.util.HashMap;
  */
 
 public class OnTouchPuzzleListener implements OnTouchListener {
-    PuzzlePieces puzzlePieces;
+    private PuzzlePieces puzzlePieces;
 
     public OnTouchPuzzleListener(PuzzlePieces puzzlePieces) {
         this.puzzlePieces = puzzlePieces;
-
     }
 
     private Coordinate FindBlankPieceCoordinates(float x, float y) {
-        Coordinate coordinate = new Coordinate(x,y);
+        Coordinate coordinate = new Coordinate(x,y,puzzlePieces.getItem(0).getWidth()+1f);
         for (int i = 0; i<puzzlePieces.getCount(); i++) {
             if (puzzlePieces.getItem(i).getAlpha() == 0f) {
                 Coordinate emptyImageView = new Coordinate(puzzlePieces.getItem(i).getX(),
-                        puzzlePieces.getItem(i).getY()).ToRound(puzzlePieces.getItem(i).getWidth()+1f);
-                if(NearMe(coordinate.ToRound(puzzlePieces.getItem(i).getWidth()+1f), emptyImageView)) {
-                    coordinate = new Coordinate(puzzlePieces.getItem(i).getX(), puzzlePieces.getItem(i).getY());
+                        puzzlePieces.getItem(i).getY(), puzzlePieces.getItem(i).getWidth());
+                if(puzzlePieces.NearMe(coordinate, emptyImageView)) {
+                    coordinate = new Coordinate(puzzlePieces.getItem(i).getX(),
+                            puzzlePieces.getItem(i).getY(),
+                            puzzlePieces.getItem(i).getWidth());
                     puzzlePieces.getItem(i).setX(x);
                     puzzlePieces.getItem(i).setY(y);
                 }
-                return coordinate.ToBackUp();
+                return coordinate;
             }
         }
-        return coordinate.ToBackUp();
+        return coordinate;
     }
 
-
-    private boolean NearMe(Coordinate a, Coordinate b){
-        //System.out.println(a.x + " " + a.y + " - " + b.x + " " + b.y );
-        if(a.x+1 == b.x && a.y == b.y){
-            return true;
-        }
-        if(a.x-1 == b.x && a.y == b.y){
-            return true;
-        }
-        if(a.y+1 == b.y && a.x == b.x){
-            return true;
-        }
-        if(a.y-1 == b.y && a.x == b.x){
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Coordinate coordinate = FindBlankPieceCoordinates(v.getX(), v.getY());
-                v.setX(coordinate.x);
-                v.setY(coordinate.y);
+                v.setX(coordinate.realX);
+                v.setY(coordinate.realY);
                 return true;
             case MotionEvent.ACTION_MOVE:
 

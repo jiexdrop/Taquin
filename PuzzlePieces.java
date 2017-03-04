@@ -17,9 +17,8 @@ import java.util.Map;
  * Created by Jorge Nogueira on 28/02/17.
  */
 
-public class PuzzlePieces extends BaseAdapter{
+public class PuzzlePieces extends BaseAdapter {
     private ArrayList<ImageView> puzzlePiecesViews = new ArrayList<>();
-    private HashMap<Integer,Coordinate> puzzleModel = new HashMap<>();
     private Bitmap image;
     private Context context;
     private int size;
@@ -36,7 +35,7 @@ public class PuzzlePieces extends BaseAdapter{
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -44,35 +43,47 @@ public class PuzzlePieces extends BaseAdapter{
         return puzzlePiecesViews.get(position);
     }
 
-    public PuzzlePieces(Context context, String name, int size){
+    public boolean NearMe(Coordinate a, Coordinate b) {
+        //System.out.println(a.x + " " + a.y + " - " + b.x + " " + b.y );
+        if (a.x + 1 == b.x && a.y == b.y) {
+            return true;
+        }
+        if (a.x - 1 == b.x && a.y == b.y) {
+            return true;
+        }
+        if (a.y + 1 == b.y && a.x == b.x) {
+            return true;
+        }
+        if (a.y - 1 == b.y && a.x == b.x) {
+            return true;
+        }
+        return false;
+    }
+
+    public PuzzlePieces(Context context, String name, int size) {
         this.context = context;
         this.size = size;
         image = BitmapFactory.decodeResource(context.getResources(),
-                context.getResources().getIdentifier(name,"drawable", context.getPackageName()));
-        genPuzzlePieces(image);
+                context.getResources().getIdentifier(name, "drawable", context.getPackageName()));
+        GeneratePuzzlePieces();
+
     }
 
-    public HashMap<Integer, Coordinate> getPuzzleModel() {
-        return puzzleModel;
+    public void Shuffle() {
+        puzzlePiecesViews.get(size * size - 1).setAlpha(0f);
     }
 
-    private void genPuzzlePieces(Bitmap image){
-        int at=0;
-        for(int i = 0; i < size; i++) {
-            for(int j = 0; j < size; j++) {
-                Bitmap toAdd = Bitmap.createBitmap(image, j * (image.getWidth()/size),
-                        i * (image.getWidth()/size), (image.getWidth()/size),
-                        (image.getWidth()/size));
-                puzzleModel.put(at++, new Coordinate(i,j));
+    private void GeneratePuzzlePieces() {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                Bitmap toAdd = Bitmap.createBitmap(image, j * (image.getWidth() / size),
+                        i * (image.getWidth() / size), (image.getWidth() / size),
+                        (image.getWidth() / size));
 
                 ImageView imageView = new ImageView(context);
                 imageView.setAdjustViewBounds(true);
                 imageView.setImageBitmap(toAdd);
                 imageView.setOnTouchListener(new OnTouchPuzzleListener(this));
-
-                if(puzzlePiecesViews.size()==size*size-1){
-                    imageView.setAlpha(0f);
-                }
 
                 puzzlePiecesViews.add(imageView);
             }

@@ -4,6 +4,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public class OnTouchPuzzleListener implements OnTouchListener {
                 Coordinate coordinate = FindBlankPieceCoordinates(v.getX(), v.getY());
                 v.setX(coordinate.realX);
                 v.setY(coordinate.realY);
+                puzzlePieces.Win();
                 return true;
             case MotionEvent.ACTION_MOVE:
 

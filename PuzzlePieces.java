@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -81,14 +82,18 @@ public class PuzzlePieces extends BaseAdapter {
     public boolean Win(){
         Coordinate lastValue = new Coordinate(0,0,0);
 
+        int v = 0;
         for (ImageView imageView:puzzlePiecesViews) {
-
+            v++;
             Coordinate thisValue = PieceValue(imageView);
-            System.out.println(thisValue.x + "/" + thisValue.y + " - " + lastValue.x + "/" + lastValue.y);
+            //System.out.println(thisValue.x + "/" + thisValue.y + " - " + lastValue.x + "/" + lastValue.y);
             if(!thisValue.isBiggerThan(lastValue)){
                 return false;
             }
             lastValue = thisValue;
+            if(v%size==0){
+                lastValue = new Coordinate(0,0,0);
+            }
         }
 
         solved = true;
@@ -105,6 +110,14 @@ public class PuzzlePieces extends BaseAdapter {
         this.size = size;
         image = BitmapFactory.decodeResource(context.getResources(),
                 context.getResources().getIdentifier(name, "drawable", context.getPackageName()));
+        GeneratePuzzlePieces();
+
+    }
+
+    public PuzzlePieces(Context context, Bitmap image, int size) {
+        this.context = context;
+        this.size = size;
+        this.image = image;
         GeneratePuzzlePieces();
 
     }
@@ -146,6 +159,7 @@ public class PuzzlePieces extends BaseAdapter {
         a.setX(save.realX);
         a.setY(save.realY);
     }
+
 
     private void GeneratePuzzlePieces() {
         for (int i = 0; i < size; i++) {

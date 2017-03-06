@@ -8,11 +8,12 @@ import java.util.Random;
  */
 
 public class Coordinate {
-    float x, y, realX, realY, size;
+    float x, y, realX, realY, width, size;
 
     public Coordinate(float realX, float realY, float width) {
         this.realX = realX;
         this.realY = realY;
+        this.width = width;
 
         if(width!=0) {
             x = Math.round(realX / width);
@@ -60,8 +61,8 @@ public class Coordinate {
     public boolean isBiggerThan(Coordinate coordinate){
         if ((this.x > coordinate.x && this.y > coordinate.y)
                 || (this.x == coordinate.x && this.y == coordinate.y)
-                || (this.x > coordinate.x && this.y <= coordinate.y)
-                || (this.x <= coordinate.x && this.y > coordinate.y)){
+                || (this.x > coordinate.x && this.y >= coordinate.y)
+                || (this.x >= coordinate.x && this.y > coordinate.y)){
             return true;
         }
         return false;

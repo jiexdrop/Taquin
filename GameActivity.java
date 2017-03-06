@@ -1,6 +1,8 @@
 package com.jnvarzea.taquin;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
@@ -37,7 +39,12 @@ public class GameActivity extends AppCompatActivity {
         String uriImage = getIntent().getStringExtra("IMAGE");
         size = getIntent().getIntExtra("SIZE", 3);
 
-        puzzlePieces = new PuzzlePieces(this, uriImage, size);
+        if(uriImage!="" && uriImage!=null) {
+            puzzlePieces = new PuzzlePieces(this, uriImage, size);
+        } else {
+            Bitmap image = getIntent().getParcelableExtra("IMAGE_BITMAP");
+            puzzlePieces = new PuzzlePieces(this, image, size);
+        }
 
         puzzleGridView.setNumColumns(size);
         puzzleGridView.setAdapter(puzzlePieces);
@@ -49,8 +56,16 @@ public class GameActivity extends AppCompatActivity {
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
+
                 if(puzzlePieces.isSolved()) {
                     Toast.makeText(getApplicationContext(), "WIN", Toast.LENGTH_LONG).show();
+
+                    SharedPreferences sharedPref = getSharedPreferences(getPackageName(),Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("LAST_SCORE",chronometer.getText().toString());
+                    System.out.println(chronometer.getText().toString());
+                    editor.commit();
+
                     chronometer.stop();
                     puzzlePieces.getBlankView().setAlpha(1f);
                 }

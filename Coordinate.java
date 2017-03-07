@@ -24,6 +24,7 @@ public class Coordinate {
     public Coordinate(float realX, float realY, float width, int size) {
         this.realX = realX;
         this.realY = realY;
+        this.width = width;
 
         x = Math.round(realX / width);
         y = Math.round(realY / width);
@@ -59,13 +60,9 @@ public class Coordinate {
     }
 
     public boolean isBiggerThan(Coordinate coordinate){
-        if ((this.x > coordinate.x && this.y > coordinate.y)
-                || (this.x == coordinate.x && this.y == coordinate.y)
-                || (this.x > coordinate.x && this.y >= coordinate.y)
-                || (this.x >= coordinate.x && this.y > coordinate.y)){
+        if (this.y * size + this.x > coordinate.y * size + coordinate.x){
             return true;
         }
         return false;
     }
-
 }

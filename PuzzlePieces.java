@@ -80,29 +80,22 @@ public class PuzzlePieces extends BaseAdapter {
      * @return true if win
      */
     public boolean Win(){
-        Coordinate lastValue = new Coordinate(0,0,0);
-
-        int v = 0;
+        Coordinate lastValue = new Coordinate(-1,-1,0,size);
         for (ImageView imageView:puzzlePiecesViews) {
-            v++;
             Coordinate thisValue = PieceValue(imageView);
             //System.out.println(thisValue.x + "/" + thisValue.y + " - " + lastValue.x + "/" + lastValue.y);
+
             if(!thisValue.isBiggerThan(lastValue)){
                 return false;
             }
             lastValue = thisValue;
-            if(v%size==0){
-                lastValue = new Coordinate(0,0,0);
-            }
         }
-
         solved = true;
-
         return true;
     }
 
     public Coordinate PieceValue(ImageView a){
-        return new Coordinate(a.getX(),a.getY(), a.getWidth()+1f);
+        return new Coordinate(a.getX(),a.getY(), a.getWidth()+1f, size);
     }
 
     public PuzzlePieces(Context context, String name, int size) {

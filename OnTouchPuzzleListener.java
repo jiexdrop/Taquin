@@ -53,9 +53,7 @@ public class OnTouchPuzzleListener implements OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
                 Coordinate coordinate = FindBlankPieceCoordinates(v.getX(), v.getY());
-                System.out.println(v.getX() + "/" + v.getY() + "-" + coordinate.realY + "/" + coordinate.realX);
 
                 TranslateAnimation animation = new TranslateAnimation(0,0,0,0);
                 if (coordinate.realX > v.getX()) {
@@ -71,14 +69,10 @@ public class OnTouchPuzzleListener implements OnTouchListener {
                     animation = new TranslateAnimation(0, 0, 0, -v.getHeight());
                 }
 
-                animation.setDuration(200);
-
+                animation.setDuration(100);
                 v.startAnimation(animation);
-
-
                 animation.setAnimationListener(new SlideListner(v, coordinate));
 
-                puzzlePieces.Win();
                 return true;
             case MotionEvent.ACTION_MOVE:
 
@@ -108,6 +102,7 @@ public class OnTouchPuzzleListener implements OnTouchListener {
             v.setX(c.realX);
             v.setY(c.realY);
             v.clearAnimation();
+            puzzlePieces.Win();
         }
 
         @Override

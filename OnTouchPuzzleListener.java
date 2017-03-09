@@ -51,33 +51,25 @@ public class OnTouchPuzzleListener implements OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Coordinate coordinate = FindBlankPieceCoordinates(v.getX(), v.getY());
 
-                TranslateAnimation animation = new TranslateAnimation(0,0,0,0);
+                TranslateAnimation animation = new TranslateAnimation(0, 0, 0, 0);
                 if (coordinate.realX > v.getX()) {
                     animation = new TranslateAnimation(0, v.getWidth(), 0, 0);
-                }
-                else if (coordinate.realX < v.getX()) {
+                } else if (coordinate.realX < v.getX()) {
                     animation = new TranslateAnimation(0, -v.getWidth(), 0, 0);
-                }
-                else if (coordinate.realY > v.getY()) {
+                } else if (coordinate.realY > v.getY()) {
                     animation = new TranslateAnimation(0, 0, 0, v.getHeight());
-                }
-                else if (coordinate.realY < v.getY()) {
+                } else if (coordinate.realY < v.getY()) {
                     animation = new TranslateAnimation(0, 0, 0, -v.getHeight());
                 }
 
-                animation.setDuration(100);
+                animation.setDuration(90);
                 v.startAnimation(animation);
                 animation.setAnimationListener(new SlideListner(v, coordinate));
-
-                return true;
-            case MotionEvent.ACTION_MOVE:
-
-                return true;
-            case MotionEvent.ACTION_UP:
                 return true;
         }
         return false;
@@ -94,14 +86,13 @@ public class OnTouchPuzzleListener implements OnTouchListener {
 
         @Override
         public void onAnimationStart(Animation animation) {
-
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
+            v.clearAnimation();
             v.setX(c.realX);
             v.setY(c.realY);
-            v.clearAnimation();
             puzzlePieces.Win();
         }
 

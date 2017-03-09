@@ -1,8 +1,13 @@
 package com.jnvarzea.taquin;
 
 import android.content.Context;
+import android.content.CursorLoader;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
@@ -10,8 +15,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +33,7 @@ import java.util.Map;
  */
 
 public class PuzzlePieces extends BaseAdapter {
-    private ArrayList<ImageView> puzzlePiecesViews = new ArrayList<>();
+    private List<ImageView> puzzlePiecesViews = new ArrayList<>();
     private Bitmap image;
     private Context context;
     private int size;
@@ -36,16 +49,6 @@ public class PuzzlePieces extends BaseAdapter {
     @Override
     public ImageView getItem(int position) {
         return puzzlePiecesViews.get(position);
-    }
-
-    public ImageView getItem(Coordinate coordinate) {
-        for(ImageView imageView:puzzlePiecesViews){
-            Coordinate toTest = new Coordinate(imageView.getX(), imageView.getY(), imageView.getWidth());
-            if(coordinate.Equals(toTest)){
-                return imageView;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -81,6 +84,7 @@ public class PuzzlePieces extends BaseAdapter {
      */
     public boolean Win(){
         Coordinate lastValue = new Coordinate(-1,-1,0,size);
+
         for (ImageView imageView:puzzlePiecesViews) {
             Coordinate thisValue = PieceValue(imageView);
             //System.out.println(thisValue.x + "/" + thisValue.y + " - " + lastValue.x + "/" + lastValue.y);
@@ -101,18 +105,18 @@ public class PuzzlePieces extends BaseAdapter {
     public PuzzlePieces(Context context, String name, int size) {
         this.context = context;
         this.size = size;
-        image = BitmapFactory.decodeResource(context.getResources(),
-                context.getResources().getIdentifier(name, "drawable", context.getPackageName()));
-        GeneratePuzzlePieces();
+            image = BitmapFactory.decodeResource(context.getResources(),
+                    context.getResources().getIdentifier(name, "drawable", context.getPackageName()));
 
+        GeneratePuzzlePieces();
     }
 
-    public PuzzlePieces(Context context, Bitmap image, int size) {
+    public PuzzlePieces(Context context, Bitmap bitmap, int size) {
         this.context = context;
         this.size = size;
-        this.image = image;
-        GeneratePuzzlePieces();
+        this.image = bitmap;
 
+        GeneratePuzzlePieces();
     }
 
     public void Shuffle() {
@@ -121,13 +125,14 @@ public class PuzzlePieces extends BaseAdapter {
                 blankView.getY(), blankView.getWidth()+1f, size);
         blankView.setAlpha(0f);
 
-        for(int i = 0; i<(100*size); i++) {
+        /*for(int i = 0; i<(100*size); i++) {
             ImageView next = getItem(blankViewCoordinate.NextMove());
             if (next != null) {
                 Exchange(next, blankView);
             }
-        }
+        }*/
     }
+
 
     public boolean isSolved() {
         return solved;
@@ -152,7 +157,6 @@ public class PuzzlePieces extends BaseAdapter {
         a.setX(save.realX);
         a.setY(save.realY);
     }
-
 
     private void GeneratePuzzlePieces() {
         for (int i = 0; i < size; i++) {

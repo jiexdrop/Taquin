@@ -28,7 +28,6 @@ public class PuzzlePager extends ViewPager {
 
     public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
         private static final float MIN_SCALE = 0.85f;
-        private static final float MIN_ALPHA = 0.50f;
 
         public void transformPage(View view, float position) {
             int pageWidth = view.getWidth();
@@ -52,9 +51,7 @@ public class PuzzlePager extends ViewPager {
                 view.setScaleY(scaleFactor);
 
                 // Fade the page relative to its size.
-                view.setAlpha(MIN_ALPHA +
-                        (scaleFactor - MIN_SCALE) /
-                                (1 - MIN_SCALE) * (1 - MIN_ALPHA));
+                view.setAlpha(1);
 
             } else { // (1,+Infinity]
                 view.setAlpha(0);

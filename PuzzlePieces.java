@@ -56,11 +56,32 @@ public class PuzzlePieces extends BaseAdapter {
         return position;
     }
 
+    /**
+     * Get imageView at coordinate
+     * @param coordinate coordinate
+     * @return imageview
+     */
+    public ImageView getItem(Coordinate coordinate) {
+        for(ImageView imageView:puzzlePiecesViews){
+            Coordinate toTest = new Coordinate(imageView.getX(), imageView.getY(), imageView.getWidth());
+            if(coordinate.Equals(toTest)){
+                return imageView;
+            }
+        }
+        return null;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return puzzlePiecesViews.get(position);
     }
 
+    /**
+     * Find if coordinate a is near to coordinate b
+     * @param a a
+     * @param b b
+     * @return true if near and false if not
+     */
     public boolean NearMe(Coordinate a, Coordinate b) {
         //System.out.println(a.x + " " + a.y + " - " + b.x + " " + b.y );
         if (a.x + 1 == b.x && a.y == b.y) {
@@ -79,7 +100,7 @@ public class PuzzlePieces extends BaseAdapter {
     }
 
     /**
-     * It works!
+     * It works !
      * @return true if win
      */
     public boolean Win(){
@@ -125,12 +146,13 @@ public class PuzzlePieces extends BaseAdapter {
                 blankView.getY(), blankView.getWidth()+1f, size);
         blankView.setAlpha(0f);
 
-        /*for(int i = 0; i<(100*size); i++) {
+        //Exchange puzzle pieces for a certain size
+        for(int i = 0; i<(100*size); i++) {
             ImageView next = getItem(blankViewCoordinate.NextMove());
             if (next != null) {
                 Exchange(next, blankView);
             }
-        }*/
+        }
     }
 
 

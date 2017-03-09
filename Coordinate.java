@@ -4,7 +4,9 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Created by Jorge Nogueira on 28/02/17.
+ * Coodinate is used in order to have something like a "2D model" to get
+ * the columns [i][j] in the x and y
+ * RealX and RealY are the values form the ImageViews
  */
 
 public class Coordinate {
@@ -32,6 +34,10 @@ public class Coordinate {
         this.size = size;
     }
 
+    /**
+     * In order to shuffle the puzzle at first
+     * @return myself at my new position
+     */
     public Coordinate NextMove() {
         Random random = new Random();
         switch (random.nextInt(4)) {
@@ -59,6 +65,12 @@ public class Coordinate {
         return this.x == coordinate.x && this.y == coordinate.y;
     }
 
+    /**
+     * Get the indexes of the image views in order to know if the puzzle is solved
+     * here allows to know if this coordinate is bigger than the other
+     * @param coordinate coordinate to test
+     * @return true if bigger
+     */
     public boolean isBiggerThan(Coordinate coordinate){
         if (this.y * size + this.x > coordinate.y * size + coordinate.x){
             return true;

@@ -80,6 +80,9 @@ public class ChooseImageActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Capture photo to 1
+     */
     public void capturePhoto() {
         try {
             Intent captureIntent = new Intent(
@@ -115,6 +118,10 @@ public class ChooseImageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Crop the image to 2
+     * @param imageFile imagefile
+     */
     private void doCrop(Uri imageFile) {
         try {
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
